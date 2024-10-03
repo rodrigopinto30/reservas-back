@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\space;
+use App\Models\Space;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;

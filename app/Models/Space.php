@@ -18,6 +18,6 @@ class Space extends Model {
     ];
 
     public function reservation(){
-        return $this->hasMany(reservation::class, 'space_id', 'space_id');
+        return $this->hasMany(Reservation::class, 'space_id', 'id');
     }
 }
