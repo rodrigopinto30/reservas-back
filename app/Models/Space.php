@@ -10,7 +10,7 @@ class Space extends Model {
 
     protected $fillable = [
         'space_name',
-        'space_desc',
+        // 'space_desc',
         'space_capacity',
         'space_avail_from',
         'space_avail_to',
