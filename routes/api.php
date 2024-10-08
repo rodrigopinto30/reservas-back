@@ -7,13 +7,14 @@ use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [Controller::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
 
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
+    Route::post('/register', [Controller::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/me', [AuthController::class, 'me']);
 });
@@ -37,7 +38,7 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'space'
 ], function () {
     Route::get('/', [SpaceController::class, 'index'])->name('space.index');

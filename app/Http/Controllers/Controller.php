@@ -20,7 +20,8 @@ class Controller extends BaseController{
             'name' => 'required',
             'lastName' => 'required|string|max:50',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required|string|min:6', 
             'rol' => 'required|string|in:admin,customer',
         ]);
 

@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller {
     public function index():JsonResponse{
-        $usuarios = User::all();
+        $usuarios = User::latest()->take(5)->get();
         return response()->json($usuarios, 200);
     }
 

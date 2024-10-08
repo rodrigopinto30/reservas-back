@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 class SpaceController extends Controller {
 
     public function index (): JsonResponse{
-        $spaces = space::all();
+        $spaces = Space::latest()->take(5)->get();
         return response()->json($spaces, 200);
     }
 
