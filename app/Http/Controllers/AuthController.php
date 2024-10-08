@@ -41,19 +41,17 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
     
-        // Obtén el usuario autenticado
         $user = auth()->user();
     
-        // Responde con el token y los datos del usuario
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => JWTAuth::factory()->getTTL() * 60,
             'user' => [
                 'name' => $user->name,
-                'lastName' => $user->lastName, // Asegúrate de que este campo exista en tu modelo
+                'lastName' => $user->lastName,
                 'email' => $user->email,
-                'rol' => $user->rol, // Asegúrate de que este campo exista en tu modelo
+                'rol' => $user->rol, 
             ]
         ]);
     }

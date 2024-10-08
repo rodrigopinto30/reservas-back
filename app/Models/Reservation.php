@@ -25,10 +25,10 @@ class Reservation extends Model {
     ];
 
     public function user(){
-        return $this->belongsTo(user::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
+    
     public function space(){
-        return $this->belongsTo(space::class, 'space_id', 'id');
+        return $this->belongsTo(Space::class, 'space_id', 'id');
     }
 }

@@ -27,11 +27,12 @@ Route::group([
 });
 
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'reservation'
 ], function () {
     Route::get('/', [ReservationController::class, 'index'])->name('reservation.index');
     Route::get('/{id}', [ReservationController::class, 'show'])->name('reservation.show');
+    Route::get('/active', [ReservationController::class, 'activeReservations'])->name('reservations.active');
     Route::post('/', [ReservationController::class, 'store'])->name('reservation.store');
     Route::put('/', [ReservationController::class, 'update'])->name('reservation.update');
     Route::delete('/{id}', [ReservationController::class, 'destroy'])->name('reservation.destroy');

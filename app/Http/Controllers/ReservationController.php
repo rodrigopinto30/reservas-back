@@ -12,21 +12,22 @@ use Illuminate\Validation\ValidationException;
 class ReservationController extends Controller
 {
 
-    public function index(): JsonResponse {
-        $reservations = Reservation::all();
+    public function index(): JsonResponse
+    {
+        $reservations = Reservation::latest()->take(5)->get();
         return response()->json($reservations, 200);
     }
 
-    public function show($id): JsonResponse {
+    public function show($id): JsonResponse
+    {
 
-        $reservation = Reservation::where('reserv_id', $id)->first();
-        
-        if($reservation->user_id !== auth()->id()){
+        $reservation = Reservation::where('id', $id)->first();
+
+        if ($reservation->user_id !== auth()->id()) {
             return response()->json([
                 'error' => 'No tiene permiso para acceder a la reserva'
             ], 403);
         }
-        
         return response()->json($reservation, 200);
     }
 
@@ -80,6 +81,28 @@ class ReservationController extends Controller
                 'error' => 'No se pudo crear la reserva.',
                 'message' => $e->getMessage()
             ], 400);
+        }
+    }
+
+    public function activeReservations(): JsonResponse{
+        return response()->json("reservations", 200);
+        try {
+            $currentTime = now();
+            $reservations = Reservation::where('reserv_start', '<=', $currentTime)
+                ->where('reserv_end', '>=', $currentTime)
+                ->orderBy('reserv_start', 'desc')
+                ->take(3)
+                ->get();
+
+            if ($reservations->isEmpty()) return response()->json('No hay reservas activas en este momento', 404);
+
+            return response()->json($reservations, 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ocurrio un error al obtener las reservas activas.',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }
