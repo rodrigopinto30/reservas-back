@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->string('reserv_name', 255);
-            $table->date('reserv_start');
-            $table->date('reserv_end');
+            $table->dateTime('reserv_start');
+            $table->dateTime('reserv_end');
             $table->enum('reserv_status', ['pending', 'confirmed', 'canceled']);
             $table->unsignedBigInteger('user_id');   
             $table->unsignedBigInteger('space_id');  

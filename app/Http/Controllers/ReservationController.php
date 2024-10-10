@@ -84,10 +84,17 @@ class ReservationController extends Controller
         }
     }
 
-    public function activeReservations(): JsonResponse{
-        return response()->json("reservations", 200);
+
+    public function activeReservations(Request $request): JsonResponse
+    {
+
         try {
-            $currentTime = now();
+            if (!auth()->check()) {
+                return response()->json(['error' => 'Usuario no autenticado'], 401);
+            }
+
+            $currentTime = now()->format('Y-m-d H:i:s');
+
             $reservations = Reservation::where('reserv_start', '<=', $currentTime)
                 ->where('reserv_end', '>=', $currentTime)
                 ->orderBy('reserv_start', 'desc')
@@ -97,10 +104,36 @@ class ReservationController extends Controller
             if ($reservations->isEmpty()) return response()->json('No hay reservas activas en este momento', 404);
 
             return response()->json($reservations, 200);
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Ocurrio un error al obtener las reservas activas.',
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function finishedReservations(): JsonResponse
+    {
+        try {
+            if (!auth()->check()) {
+                return response()->json(['error' => 'Usuario no autenticado'], 401);
+            }
+
+            $currentTime = now()->format('Y-m-d H:i:s');
+            $reservations = Reservation::join('users', 'users.id', 'reservations.user_id')
+                ->join('spaces', 'spaces.id', 'reservations.space_id')
+                ->select('users.name', 'reservations.reserv_name', 'reservations.reserv_start', 'reservations.reserv_end', 'spaces.space_name')
+                ->where('reserv_end', '<=', $currentTime)
+                ->orderBy('reserv_end', 'asc')
+                ->take(3)
+                ->get();
+
+            if ($reservations->isEmpty()) return response()->json("No hay reservas finalizadas", 404);
+
+            return response()->json($reservations, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ocurrio un error al obtener las reservas finalizadas',
                 'message' => $e->getMessage()
             ]);
         }

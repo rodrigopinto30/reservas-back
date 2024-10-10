@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SpaceController;
 use App\Http\Controllers\Controller;
+use App\Models\Reservation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -26,14 +27,16 @@ Route::group([
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
 });
 
+
 Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'reservation'
 ], function () {
+    Route::post('/', [ReservationController::class, 'store'])->name('reservation.store');
+    Route::get('/active', [ReservationController::class, 'activeReservations'])->name('reservations.active');
+    Route::get('/finished', [ReservationController::class, 'finishedReservations'])->name('reservations.finished');
     Route::get('/', [ReservationController::class, 'index'])->name('reservation.index');
     Route::get('/{id}', [ReservationController::class, 'show'])->name('reservation.show');
-    Route::get('/active', [ReservationController::class, 'activeReservations'])->name('reservations.active');
-    Route::post('/', [ReservationController::class, 'store'])->name('reservation.store');
     Route::put('/', [ReservationController::class, 'update'])->name('reservation.update');
     Route::delete('/{id}', [ReservationController::class, 'destroy'])->name('reservation.destroy');
 });

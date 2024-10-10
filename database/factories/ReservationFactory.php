@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,11 +20,11 @@ class ReservationFactory extends Factory {
 
     public function definition(): array {
         return [
-            'user_id' => $this->faker->numberBetween(1,2),
+            'user_id' => $this->faker->numberBetween(1, 2),
             'space_id' => $this->faker->numberBetween(3, 10),
-            'reserv_name' => $this->faker->word(2, true),
-            'reserv_start' => $this->faker->dateTimeBetween('now', '+1 days'),
-            'reserv_end' => $this->faker->dateTimeBetween('+1 days', '+2 days'),
+            'reserv_name' => $this->faker->sentence(2),
+            'reserv_start' => Carbon::createFromFormat('Y-m-d H:i:s', $this->faker->dateTimeBetween('now', '+1 days')->format('Y-m-d H:i:s')),
+            'reserv_end' => Carbon::createFromFormat('Y-m-d H:i:s', $this->faker->dateTimeBetween('+1 days', '+2 days')->format('Y-m-d H:i:s')),
             'reserv_status' => 'confirmed',
         ];
     }
