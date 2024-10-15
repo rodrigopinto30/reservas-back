@@ -23,6 +23,7 @@ Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'user'
 ], function () {
+    Route::get('/lastUser', [UserController::class, 'lastUser'])->name('user.lastUser');
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
 });
