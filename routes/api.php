@@ -13,7 +13,7 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function () {
-    Route::post('/register', [Controller::class, 'register']);
+    Route::post('/register', [UserController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -26,6 +26,7 @@ Route::group([
     Route::get('/lastUser', [UserController::class, 'lastUser'])->name('user.lastUser');
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
+    Route::put('/', [UserController::class, 'update'])->name('user.update');
 });
 
 
