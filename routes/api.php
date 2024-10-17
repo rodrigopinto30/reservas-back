@@ -27,6 +27,7 @@ Route::group([
     Route::get('/', [UserController::class, 'index'])->name('user.index');
     Route::get('/{id}', [UserController::class, 'show'])->name('user.show');
     Route::put('/', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 
@@ -47,6 +48,7 @@ Route::group([
     'middleware' => 'auth:api',
     'prefix' => 'space'
 ], function () {
+    Route::get('/lastSpace', [SpaceController::class, 'lastSpace'])->name('space.lastSpace');
     Route::get('/', [SpaceController::class, 'index'])->name('space.index');
     Route::get('/{id}', [SpaceController::class, 'show'])->name('space.show');
     Route::post('/', [SpaceController::class, 'store'])->name('space.store');

@@ -11,13 +11,18 @@ use Illuminate\Validation\ValidationException;
 class SpaceController extends Controller {
 
     public function index (): JsonResponse{
-        $spaces = Space::latest()->take(5)->get();
+        $spaces = Space::all();
         return response()->json($spaces, 200);
     }
 
     public function show($id): JsonResponse{
-        $space = Space::where('space_id', $id)->first();
+        $space = Space::where('id', $id)->first();
         return response()->json($space, 200);
+    }
+    
+    public function lastSpace (): JsonResponse{
+        $spaces = Space::latest()->take(5)->get();
+        return response()->json($spaces, 200);
     }
 
     public function store(Request $request): JsonResponse{
@@ -56,50 +61,25 @@ class SpaceController extends Controller {
 
     public function update(Request $request): JsonResponse {
 
-        $space = Space::where('space_id', $request->input('id'))->first();
-
-        if($space == null) return response()->json('El espacio no existe', 200);
-
         try {
+            $space = Space::findOrFail($request->input('id'));
+
             $validator = Validator::make($request->all(), [
-                'name' => 'string|max:255',
-                'description' => 'string|max:500',
-                'capacity' => 'integer',
-                'avail_from' => 'date', 
-                'avail_to' => 'date|after:space_avail_from', 
-                'price_hour' => 'numeric|min:0', 
+                'name' => 'nullable|string|max:255',
+                'capacity' => 'nullable|integer',
+                'avail_from' => 'nullable|date', 
+                'avail_to' => 'nullable|date|after:space_avail_from', 
+                'price_hour' => 'nullable|numeric|min:0', 
             ]);
 
             if($validator->fails()) throw new ValidationException($validator);
 
-            $spaceValidated = $validator->validated();
-            $spaceUpdated = [];
-
-            if($request->has('name')){
-                $spaceUpdated['space_name'] = $spaceValidated['name'];
-            }
-
-            if($request->has('description')){
-                $spaceUpdated['space_desc'] = $spaceValidated['description'];
-            }
-
-            if($request->has('capacity')){
-                $spaceUpdated['space_capac'] = $spaceValidated['capacity'];
-            }
-
-            if($request->has('avail_from')){
-                $spaceUpdated['space_avail_from'] = $spaceValidated['avail_from'];
-            }
-
-            if($request->has('avail_to')){
-                $spaceUpdated['space_avail_to'] = $spaceValidated['avail_to'];
-            }
-
-            if($request->has('price_hour')){
-                $spaceUpdated['space_price_hour'] = $spaceValidated['price_hour'];
-            }
-
-            $space->update($spaceUpdated);
+            $space->space_name = $request->input('space_name', $space->space_name);
+            $space->space_capacity = $request->input('space_capacity', $space->space_capac);
+            $space->space_avail_from = $request->input('space_avail_from', $space->space_avail_from);
+            $space->space_avail_to = $request->input('space_avail_to', $space->space_avail_to);
+            
+            $space->save();
 
             return response()->json([
                 'message' => 'El espacio fue modificado éxitosamente'
